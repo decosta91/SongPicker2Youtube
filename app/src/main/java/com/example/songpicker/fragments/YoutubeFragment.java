@@ -19,13 +19,17 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.ResourceId;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Thumbnail;
+import com.google.api.services.youtube.model.Video;
+import com.google.api.services.youtube.model.VideoListResponse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -97,31 +101,41 @@ public class YoutubeFragment extends Fragment {
         try {
             Log.i("Youtube","Enter in try");
             YouTube.Search.List search = youTube.search().list("id,snippet");
+           // YouTube.Videos.List search=youTube.videos().list("");
+
+
             search.setKey("AIzaSyAZMy8jqMPolJqLJLMCoDkYkYLjihN8J7c");
             search.setQ("music");
             search.setType("video");
-            search.setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/default/url)");
+        //    search.setPageToken();
+            search.setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/medium/url)");
             search.setMaxResults(25l);
             SearchListResponse searchResponse = search.execute();
+
             Log.i("YoutubeResponse",searchResponse.toString());
             List<SearchResult> searchResultList = searchResponse.getItems();
+            List<String> videoIds = new ArrayList<String>();
+      //      search.setKey(apiKey);
+        //    search.set
+
+
             if (searchResultList != null) {
-              //  prettyPrint(searchResultList.iterator(), queryTerm);
-            /*    Iterator<SearchResult> searchResultIterator=searchResultList.iterator();
-                while (searchResultIterator.hasNext()){
-                    SearchResult singleVideo = searchResultIterator.next();
-                    ResourceId rId = singleVideo.getId();
 
-                    if (rId.getKind().equals("youtube#video")){
-                        Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getDefault();
+                for (SearchResult searchResult : searchResultList) {
+                    videoIds.add(searchResult.getId().getVideoId());
+                }
+                Joiner stringJoiner = Joiner.on(',');
+                String videoId = stringJoiner.join(videoIds);
 
-                        Log.i("YoutubeInfo","VideoID: "+rId.getVideoId());
-                        Log.i("YoutubeInfo","Title: "+singleVideo.getSnippet().getTitle());
-                        Log.i("YoutubeInfo","Thumbnail: "+thumbnail.getUrl());
-                        Log.i("YoutubeInfo","Thumbnail: "+thumbnail.getUrl());
-                    }
-
-                }*/
+                // Call the YouTube Data API's youtube.videos.list method to
+                // retrieve the resources that represent the specified videos.
+                YouTube.Videos.List listVideosRequest = youTube.videos().list("contentDetails,statistics").setId(videoId);
+                listVideosRequest.setKey("AIzaSyAZMy8jqMPolJqLJLMCoDkYkYLjihN8J7c");
+                listVideosRequest.setFields("items(contentDetails/duration,id,statistics/viewCount)");
+                VideoListResponse listResponse = listVideosRequest.execute();
+                Log.i("Youtube",listResponse.toString());
+                List<Video> videoList = listResponse.getItems();
+                youtubeAdapter.setVideoItems(videoList);
                 youtubeAdapter.addItems(searchResultList);
             }
         } catch (IOException e) {

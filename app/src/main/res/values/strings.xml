@@ -13,5 +13,6 @@
     <string name="image_fetcher_network_not_available">Network not aveliable</string>
     <string name="SMALL_THUMBS_CACHE_FOLDER">thumbs/small</string>
     <string name="test">sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss</string>
+    <string name="testDuration">1:44:20</string>
 
 </resources>

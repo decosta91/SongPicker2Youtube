@@ -11,6 +11,7 @@
         android:orientation="horizontal"
         android:weightSum="5">
         <RelativeLayout
+            android:id="@+id/relativ"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2">
@@ -22,8 +23,22 @@
                 android:src="@drawable/song_art"
                 android:scaleType="centerCrop"
                 />
-
-        </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                android:layout_alignParentBottom="true">
+            <TextView
+                android:id="@+id/ytViewCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/white"
+                android:background="@color/black"
+                android:text="@string/testDuration"/>
+            </RelativeLayout>
+       </RelativeLayout>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
